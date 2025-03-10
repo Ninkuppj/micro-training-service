@@ -1,0 +1,268 @@
+syntax = "proto3";
+
+package user;
+
+import "google/protobuf/timestamp.proto"; // For timestamps
+
+enum Gender {
+  MALE = 0;
+  FEMALE = 1;
+  OTHER = 2;
+}
+
+message Role {
+  string roleId = 1; // String representation of ObjectId
+  string roleNm = 2;
+  string roleDesc = 3;
+  string creUsrId = 4;
+  google.protobuf.Timestamp creDt = 5;
+  string updUsrId = 6;
+  google.protobuf.Timestamp updDt = 7;
+  repeated User users = 8; // Be cautious about embedding; consider referencing
+}
+
+message Permission {
+  string permissionId = 1;
+  string creUsrId = 2;
+  string updUsrId = 3;
+  google.protobuf.Timestamp createdAt = 4;
+  google.protobuf.Timestamp updatedAt = 5;
+  string prmsnNm = 6;
+  string prmsnDesc = 7;
+  bool actFlg = 8;
+  repeated Group groups = 9; // Be cautious about embedding; consider referencing
+  string groupId = 10;
+}
+
+message Group {
+  string groupId = 1;
+  string creUsrId = 2;
+  string updUsrId = 3;
+  google.protobuf.Timestamp createdAt = 4;
+  google.protobuf.Timestamp updatedAt = 5;
+  string grpNm = 6;
+  Group parent = 7; // Nested group
+  repeated Group children = 8; // Nested groups
+  string grpDesc = 9;
+  bool actFlg = 10;
+  repeated User users = 11; // Be cautious about embedding; consider referencing
+  repeated Permission permissions = 12; // Be cautious about embedding; consider referencing
+  repeated string permissionIds = 13; // For storing permission IDs
+}
+
+message User {
+  string userId = 1;
+  string name = 2;
+  string email = 3;
+  string password = 4; // Only for create/update; hash before storing
+  string image = 5;
+  bool isActive = 6;
+  Gender gender = 7;
+  int32 age = 8;
+  string creUsrId = 9;
+  string updUsrId = 10;
+  google.protobuf.Timestamp createdAt = 11;
+  google.protobuf.Timestamp updatedAt = 12;
+  string groupId = 13;
+  repeated PasswordResetToken passwordResetToken = 14; // Embedding
+  repeated Group groups = 15; // Be cautious about embedding; consider referencing
+  string roleId = 16;  // Store the role ID
+}
+
+message PasswordResetToken {
+  string token = 1;
+  google.protobuf.Timestamp expiry = 2;
+}
+
+// Service definition
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUserById (GetUserByIdRequest) returns (GetUserByIdResponse);
+  rpc GetUserByEmail (GetUserByEmailRequest) returns (GetUserByUsernameResponse);
+  rpc GetUserPermissions (GetUserPermissionsRequest) returns (GetUserPermissionsResponse);
+  rpc GetUsersInGroup (GetUsersInGroupRequest) returns (GetUsersInGroupResponse);
+  rpc AssignRoleToUser (AssignRoleToUserRequest) returns (AssignRoleToUserResponse);
+  rpc AssignPermissionsToRole (AssignPermissionsToRoleRequest) returns (AssignPermissionsToRoleResponse);
+  rpc CreateGroup (CreateGroupRequest) returns (CreateGroupResponse);
+  rpc GetRoleById (GetRoleByIdRequest) returns (GetRoleByIdResponse);
+  rpc GetPermissionById (GetPermissionByIdRequest) returns (GetPermissionByIdResponse);
+  rpc GetGroupById (GetGroupByIdRequest) returns (GetGroupByIdResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+  rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleResponse);
+  rpc UpdatePermission (UpdatePermissionRequest) returns (UpdatePermissionResponse);
+  rpc UpdateGroup (UpdateGroupRequest) returns (UpdateGroupResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+  rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleResponse);
+  rpc DeletePermission (DeletePermissionRequest) returns (DeletePermissionResponse);
+  rpc DeleteGroup (DeleteGroupRequest) returns (DeleteGroupResponse);
+}
+
+// Request and Response Messages (Examples - Adapt as needed)
+
+message CreateUserRequest {
+  User user = 1;
+}
+
+message CreateUserResponse {
+  string userId = 1;
+  string error = 2;
+}
+
+message GetUserByIdRequest {
+  string userId = 1;
+}
+
+message GetUserByIdResponse {
+  User user = 1;
+  string error = 2;
+}
+
+message GetUserByUsernameRequest {
+  string username = 1;
+}
+
+message GetUserByUsernameResponse {
+  User user = 1;
+  string error = 2;
+}
+
+message GetUserPermissionsRequest {
+  string userId = 1;
+}
+
+message GetUserPermissionsResponse {
+  repeated string permissions = 1;
+  string error = 2;
+}
+
+message GetUsersInGroupRequest {
+  string groupId = 1;
+}
+
+message GetUsersInGroupResponse {
+  repeated UserInfo users = 1; // UserInfo message (define if not already defined)
+  string error = 2;
+}
+
+message UserInfo { // Reusable user info message
+  string userId = 1;
+  string username = 2;
+}
+
+message AssignRoleToUserRequest {
+  string userId = 1;
+  string roleId = 2;
+}
+
+message AssignRoleToUserResponse {
+  string error = 1;
+}
+
+message AssignPermissionsToRoleRequest {
+  string roleId = 1;
+  repeated string permissionIds = 2;
+}
+
+message AssignPermissionsToRoleResponse {
+  string error = 1;
+}
+
+message CreateGroupRequest {
+  Group group = 1;
+}
+
+message CreateGroupResponse {
+  string groupId = 1;
+  string error = 2;
+}
+
+message GetRoleByIdRequest {
+  string roleId = 1;
+}
+
+message GetRoleByIdResponse {
+  Role role = 1;
+  string error = 2;
+}
+
+message GetPermissionByIdRequest {
+  string permissionId = 1;
+}
+
+message GetPermissionByIdResponse {
+  Permission permission = 1;
+  string error = 2;
+}
+
+message GetGroupByIdRequest {
+  string groupId = 1;
+}
+
+message GetGroupByIdResponse {
+  Group group = 1;
+  string error = 2;
+}
+
+message UpdateUserRequest {
+  User user = 1; // Include fields to update in the User message
+}
+
+message UpdateUserResponse {
+  string error = 1;
+}
+
+message UpdateRoleRequest {
+  Role role = 1; // Include fields to update in the Role message
+}
+
+message UpdateRoleResponse {
+  string error = 1;
+}
+
+message UpdatePermissionRequest {
+  Permission permission = 1; // Include fields to update in the Permission message
+}
+
+message UpdatePermissionResponse {
+  string error = 1;
+}
+
+message UpdateGroupRequest {
+  Group group = 1; // Include fields to update in the Group message
+}
+
+message UpdateGroupResponse {
+  string error = 1;
+}
+
+message DeleteUserRequest {
+  string userId = 1;
+}
+
+message DeleteUserResponse {
+  string error = 1;
+}
+
+message DeleteRoleRequest {
+  string roleId = 1;
+}
+
+message DeleteRoleResponse {
+  string error = 1;
+}
+
+message DeletePermissionRequest {
+  string permissionId = 1;
+}
+
+message DeletePermissionResponse {
+  string error = 1;
+}
+
+message DeleteGroupRequest {
+  string groupId = 1;
+}
+
+message DeleteGroupResponse {
+  string error = 1;
+}

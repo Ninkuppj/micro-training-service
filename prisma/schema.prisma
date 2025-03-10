@@ -1,0 +1,311 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model adm_atch {
+    atchNo     String   @id(map: "adm_atch_pk") @map("atch_no") @db.VarChar(20)
+    creUsrId   String   @map("cre_usr_id") @db.VarChar(20)
+    creDt      DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updUsrId   String   @map("upd_usr_id") @db.VarChar(20)
+    updDt      DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    fileLocUrl String?  @map("file_loc_url") @db.VarChar(200)
+    fileNm     String?  @map("file_nm") @db.VarChar(200)
+    fileSzNo   String?  @map("file_sz_no") @db.VarChar(20)
+    fileTpCd   String?  @map("file_tp_cd") @db.VarChar(20)
+    fileVerNo  String?  @map("file_ver_no") @db.VarChar(7)
+    svrFileNm  String?  @map("svr_file_nm") @db.VarChar(200)
+    refId      String?  @map("ref_id") @db.VarChar(20)
+}
+
+model adm_crs_grp_usr {
+    crsId    String   @map("crs_id") @db.VarChar(20)
+    grpUsrId String   @map("grp_usr_id") @db.VarChar(20)
+    creUsrId String   @map("cre_usr_id") @db.VarChar(20)
+    creDt    DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updUsrId String   @map("upd_usr_id") @db.VarChar(20)
+    updDt    DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    grpId    String   @map("grp_id") @db.VarChar(20)
+
+    @@id([crsId, grpId])
+}
+
+model tql_cate {
+    cateId   String   @id(map: "tql_cate_pk") @map("cate_id") @db.VarChar(20)
+    cateNm   String?  @map("cate_nm") @db.VarChar(50)
+    cateDesc String?  @map("cate_desc") @db.VarChar(500)
+    creUsrId String   @map("cre_usr_id") @db.VarChar(20)
+    creDt    DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updUsrId String   @map("upd_usr_id") @db.VarChar(20)
+    updDt    DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+}
+
+model tql_crs {
+    crsId      String   @id(map: "tql_crs_pk") @map("crs_id") @db.VarChar(20)
+    crsTitNm   String?  @map("crs_tit_nm") @db.VarChar(50)
+    crsDesc    String?  @map("crs_desc") @db.VarChar(500)
+    maxTstNo   String?  @map("max_tst_no") @db.VarChar(10)
+    atchNo     String?  @map("atch_no") @db.VarChar(200)
+    creUsrId   String   @map("cre_usr_id") @db.VarChar(20)
+    creDt      DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updUsrId   String   @map("upd_usr_id") @db.VarChar(20)
+    updDt      DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    activeFlag String   @default("Y") @map("act_flg") @db.VarChar(1)
+}
+
+model tql_crs_cate {
+    crsId    String   @map("crs_id") @db.VarChar(20)
+    cateId   String   @map("cate_id") @db.VarChar(20)
+    creUsrId String   @map("cre_usr_id") @db.VarChar(20)
+    creDt    DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updUsrId String   @map("upd_usr_id") @db.VarChar(20)
+    updDt    DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+
+    @@id([crsId, cateId], map: "tql_crs_cate_pk")
+}
+
+model tql_lect {
+    lectId    String   @id(map: "tql_lect_pk") @map("lect_id") @db.VarChar(20)
+    creUsrId  String   @map("cre_usr_id") @db.VarChar(20)
+    creDt     DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updUsrId  String   @map("upd_usr_id") @db.VarChar(20)
+    updDt     DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    sectId    String   @map("sect_id") @db.VarChar(20)
+    lectTitNm String?  @map("lect_tit_nm") @db.VarChar(100)
+    lectDesc  String?  @map("lect_desc") @db.VarChar(500)
+    lectTm    String?  @map("lect_tm") @db.VarChar(6)
+    lectSeq   Decimal? @map("lect_seq") @db.Decimal(2, 0)
+    MinTime   String?  @map("min_tm") @db.VarChar(6)
+}
+
+model tql_sect {
+    sectId    String   @id(map: "tql_sect_pk") @map("sect_id") @db.VarChar(20)
+    creUsrId  String   @map("cre_usr_id") @db.VarChar(20)
+    creDt     DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updUsrId  String   @map("upd_usr_id") @db.VarChar(20)
+    updDt     DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    crsId     String   @map("crs_id") @db.VarChar(20)
+    sectTitNm String?  @map("sect_tit_nm") @db.VarChar(100)
+    sectSeq   Decimal? @map("sect_seq") @db.Decimal(2, 0)
+    ttlLectNo Decimal? @map("ttl_lect_no") @db.Decimal(2, 0)
+    ttlSectTm String?  @map("ttl_sect_tm") @db.VarChar(6)
+    sectDesc  String?  @map("sect_desc") @db.VarChar(500)
+}
+
+model tql_usr_crs {
+    usrId     String   @map("usr_id") @db.VarChar(20)
+    crsId     String   @map("crs_id") @db.VarChar(20)
+    creUsrId  String   @map("cre_usr_id") @db.VarChar(20)
+    creDt     DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updUsrId  String   @map("upd_usr_id") @db.VarChar(20)
+    updDt     DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    cmplPctNo Decimal? @map("cmpl_pct_no") @db.Decimal(3, 0)
+
+    @@id([usrId, crsId], map: "tql_usr_crs_pk")
+}
+
+model tql_usr_lect {
+    usrId    String   @map("usr_id") @db.VarChar(20)
+    lectId   String   @map("lect_id") @db.VarChar(20)
+    creUsrId String   @map("cre_usr_id") @db.VarChar(20)
+    creDt    DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updUsrId String   @map("upd_usr_id") @db.VarChar(20)
+    updDt    DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    wtTm     String?  @map("wt_tm") @db.VarChar(6)
+    cmplFlg  String?  @map("cmpl_flg") @db.VarChar(1)
+    skpFlg   String?  @map("skp_flg") @db.VarChar(1)
+
+    @@id([usrId, lectId], map: "tql_usr_lect_pk")
+}
+
+model adm_grp {
+    grpId    String   @id(map: "adm_grp_pk") @map("grp_id") @db.VarChar(20)
+    creUsrId String   @map("cre_usr_id") @db.VarChar(20)
+    creDt    DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updUsrId String   @map("upd_usr_id") @db.VarChar(20)
+    updDt    DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    grpNm    String?  @map("grp_nm") @db.VarChar(50)
+    grpDesc  String?  @map("grp_desc") @db.VarChar(250)
+    actFlg   String   @default("y") @map("act_flg") @db.VarChar(1)
+}
+
+model adm_grp_usr {
+    grpId    String   @map("grp_id") @db.VarChar(20)
+    usrId    String   @map("usr_id") @db.VarChar(20)
+    creUsrId String   @map("cre_usr_id") @db.VarChar(20)
+    creDt    DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updUsrId String   @map("upd_usr_id") @db.VarChar(20)
+    updDt    DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+
+    @@id([grpId, usrId], map: "adm_grp_usr_pk")
+}
+
+model adm_cz_atch_drop {
+    atchNo   String   @map("atch_no") @db.VarChar(20)
+    czAtchNo String   @map("cz_atch_no") @db.VarChar(50)
+    creUsrId String   @map("cre_usr_id") @db.VarChar(20)
+    creDt    DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updUsrId String   @map("upd_usr_id") @db.VarChar(20)
+    updDt    DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    atchTpCd String?  @map("atch_tp_cd") @db.VarChar(20)
+
+    @@id([atchNo, czAtchNo], map: "adm_cz_atch_pk")
+}
+
+model Answer {
+    answerId          String   @id(map: "tql_ans_pk") @map("ans_id") @db.VarChar(20)
+    questionId        String   @map("que_id") @db.VarChar(20)
+    answerContent     String?  @map("ans_ctnt") @db.VarChar(1000)
+    answerImgUrl      String?  @map("ans_img_url") @db.VarChar(200)
+    answerOrder       Decimal? @map("ans_ord_no") @db.Decimal(1, 0)
+    correctFlag       String   @map("corr_flg") @db.VarChar(1)
+    createdUserId     String   @map("cre_usr_id") @db.VarChar(20)
+    createdDate       DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updatedUserId     String   @map("upd_usr_id") @db.VarChar(20)
+    updatedDate       DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    answerExplanation String?  @map("ans_expl_ctnt") @db.VarChar(1000)
+
+    @@map("tql_ans")
+}
+
+model CourseExam {
+    courseId       String   @map("crs_id") @db.VarChar(20)
+    examId         String   @map("exm_id") @db.VarChar(20)
+    createdUserId  String   @map("cre_usr_id") @db.VarChar(20)
+    createdDate    DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updatedUserId  String   @map("upd_usr_id") @db.VarChar(20)
+    updatedDate    DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    maxTestNumber  Decimal? @map("max_tst_no") @db.Decimal(3, 0)
+    progressNumber Decimal  @default(70) @map("prog_no") @db.Decimal(3, 0)
+
+    @@id([courseId, examId], map: "tql_crs_exm_pk")
+    @@map("tql_crs_exm")
+}
+
+model Exam {
+    examId           String   @id(map: "tql_exm_pk") @map("exm_id") @db.VarChar(20)
+    examImgUrl       String?  @map("exm_img_url") @db.VarChar(200)
+    examTitleName    String?  @map("exm_tit_nm") @db.VarChar(100)
+    examDescription  String?  @map("exm_desc") @db.VarChar(500)
+    totalScore       Decimal? @map("ttl_scre_no") @db.Decimal(5, 2)
+    questionQuantity Decimal? @map("que_qty_no") @db.Decimal(3, 0)
+    durationTime     String?  @map("dur_tm") @db.VarChar(4)
+    activeFlag       String   @map("act_flg") @db.VarChar(1)
+    createdUserId    String   @map("cre_usr_id") @db.VarChar(20)
+    createdDate      DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updatedUserId    String   @map("upd_usr_id") @db.VarChar(20)
+    updatedDate      DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    examUrlLink      String?  @map("exm_lnk_url") @db.VarChar(200)
+
+    @@map("tql_exm")
+}
+
+model ExamHistory {
+    examHistoryId String    @id(map: "tql_exm_his_pk") @map("exm_his_id") @db.VarChar(20)
+    asgn_tms      DateTime? @db.Timestamp(0)
+    dueDate       DateTime? @map("due_dt_tms") @db.Timestamp(0)
+    activeFlag    String    @map("act_flg") @db.VarChar(1)
+    examId        String?   @map("exm_id") @db.VarChar(20)
+    createdUserId String    @map("cre_usr_id") @db.VarChar(20)
+    createdDate   DateTime  @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updatedUserId String    @map("upd_usr_id") @db.VarChar(20)
+    updateDate    DateTime  @default(now()) @map("upd_dt") @db.Timestamp(0)
+
+    @@map("tql_exm_his")
+}
+
+model ExamUser {
+    examCode           String    @id(map: "tql_exm_usr_pk") @map("exm_cd") @db.VarChar(20)
+    examId             String    @map("exm_id") @db.VarChar(20)
+    userId             String    @map("usr_id") @db.VarChar(20)
+    startDate          DateTime? @map("st_dt_tms") @db.Timestamp(0)
+    finishDate         DateTime? @map("fsh_dt_tms") @db.Timestamp(0)
+    questionQuantity   Decimal?  @map("que_qty_no") @db.Decimal(3, 0)
+    totalCorrectAnswer Decimal?  @map("ttl_corr_ans_no") @db.Decimal(3, 0)
+    statusCode         String?   @map("sts_cd") @db.VarChar(20)
+    finalScore         Decimal?  @map("fnl_scre_no") @db.Decimal(5, 2)
+    activeFlag         String    @map("act_flg") @db.VarChar(1)
+    examHistoryId      String?   @map("exm_his_id") @db.VarChar(20)
+    createdUserId      String    @map("cre_usr_id") @db.VarChar(20)
+    createdDate        DateTime  @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updatedUserId      String    @map("upd_usr_id") @db.VarChar(20)
+    updatedDate        DateTime  @default(now()) @map("upd_dt") @db.Timestamp(0)
+
+    @@map("tql_exm_usr")
+}
+
+model Question {
+    questionId          String   @id(map: "tql_que_pk") @map("que_id") @db.VarChar(20)
+    questionImageUrl    String?  @map("que_img_url") @db.VarChar(200)
+    questionType        String?  @map("que_tp_cd") @db.VarChar(1)
+    questionLevel       Decimal? @map("que_lvl_no") @db.Decimal(1, 0)
+    questionDescription String?  @map("que_desc") @db.VarChar(1000)
+    createdUserId       String   @map("cre_usr_id") @db.VarChar(20)
+    createdDate         DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updatedUserId       String   @map("upd_usr_id") @db.VarChar(20)
+    updatedDate         DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    activeFlag          String   @default("Y") @map("act_flg") @db.VarChar(1)
+    skillId             String?  @map("skill_id") @db.VarChar(20)
+
+    @@map("tql_que")
+}
+
+model ExamConfigDetail {
+    examId         String   @map("exm_id") @db.VarChar(20)
+    createdUserId  String   @map("cre_usr_id") @db.VarChar(20)
+    createdDate    DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updatedUserId  String   @map("upd_usr_id") @db.VarChar(20)
+    updatedDate    DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    skillId        String   @map("skill_id") @db.VarChar(20)
+    ezLevelNo      Decimal? @map("ez_lvl_no") @db.Decimal(3, 0)
+    normalLevelNo  Decimal? @map("norm_lvl_no") @db.Decimal(3, 0)
+    extremeLevelNo Decimal? @map("xtreme_lvl_no") @db.Decimal(3, 0)
+    hardLevelNo    Decimal? @map("hrd_lvl_no") @db.Decimal(3, 0)
+
+    @@id([examId, skillId])
+    @@map("tql_exm_cfg_dtl")
+}
+
+model Skill {
+    skillId          String   @id(map: "tql_skill_pk") @map("skill_id") @db.VarChar(20)
+    createdUserId    String   @map("cre_usr_id") @db.VarChar(20)
+    createdDate      DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updatedUserId    String   @map("upd_usr_id") @db.VarChar(20)
+    updatedDate      DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    activeFlag       String   @default("Y") @map("act_flg") @db.VarChar(1)
+    skillName        String?  @map("skill_nm") @db.VarChar(40)
+    skillDescription String?  @map("skill_desc") @db.VarChar(1000)
+    shortCode        String?  @unique @map("skill_shrt_cd") @db.VarChar(20)
+
+    @@map("tql_skill")
+}
+
+model UserAnswerChoice {
+    userExamQuestionId String   @map("usr_exm_que_id") @db.VarChar(20)
+    answerId           String   @map("ans_id") @db.VarChar(20)
+    createdUserId      String   @map("cre_usr_id") @db.VarChar(20)
+    createdDate        DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updatedUserId      String   @map("upd_usr_id") @db.VarChar(20)
+    updatedDate        DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+
+    @@id([userExamQuestionId, answerId], map: "tql_usr_ans_choice_pk")
+    @@map("tql_usr_ans_choice")
+}
+
+model UserExamQuestion {
+    userExamQuestionId String   @id(map: "tql_usr_exm_que_pk") @map("usr_exm_que_id") @db.VarChar(20)
+    createdUserId      String   @map("cre_usr_id") @db.VarChar(20)
+    createdDate        DateTime @default(now()) @map("cre_dt") @db.Timestamp(0)
+    updatedUserId      String   @map("upd_usr_id") @db.VarChar(20)
+    updatedDate        DateTime @default(now()) @map("upd_dt") @db.Timestamp(0)
+    examCode           String?  @map("exm_cd") @db.VarChar(20)
+    questionId         String?  @map("que_id") @db.VarChar(20)
+    answerContent      String?  @map("ans_ctnt") @db.VarChar(1000)
+    answerPointNo      Decimal? @map("ans_pnt_no") @db.Decimal(3, 2)
+
+    @@map("tql_usr_exm_que")
+}
