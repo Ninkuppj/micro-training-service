@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class courseService {
+export class CourseService {
   create(createcourseDto: any) {
     return 'This action adds a new course';
   }
