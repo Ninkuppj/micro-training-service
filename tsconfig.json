@@ -10,6 +10,33 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "rootDir": "./",
+    "paths": {
+      "@configs": [
+        "src/libs/configs"
+      ],
+      "@cores": [
+        "src/libs/core"
+      ],
+      "@commons": [
+        "src/libs/common"
+      ],
+      "@databases": [
+        "src/libs/databases"
+      ],
+      "@intefaces": [
+        "src/libs/intefaces"
+      ],
+      "@components": [
+        "src/libs/components"
+      ],
+      "@constants": [
+        "src/libs/constants"
+      ],
+      "@swagger": [
+        "src/libs/swagger"
+      ],
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
